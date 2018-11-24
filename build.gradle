@@ -1,0 +1,134 @@
+import org.gradle.api.java.archives.internal.DefaultManifest
+import org.gradle.api.internal.file.IdentityFileResolver
+
+plugins {
+ id 'java'
+}
+
+repositories{
+	mavenCentral()
+   flatDir {
+       dirs 'lib/jars'
+   }	
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['source']
+        }
+		resources {
+			srcDirs = ['source']
+		}
+    }
+	
+}
+
+dependencies { 
+	compile fileTree(include: ['*.jar'], dir: 'lib/jars')
+	compile 'net.java.dev.jna:jna:4.5.2'
+	compile 'net.java.dev.jna:jna-platform:4.5.2'
+	compile 'args4j:args4j:2.33'
+	compile 'net.sf.ehcache:ehcache:2.10.5'
+	compile 'com.ibm.icu:icu4j:61.1'
+	compile 'org.jsoup:jsoup:1.11.3'
+	compile 'org.tukaani:xz:1.8'
+	compile 'javax.xml.bind:jaxb-api:2.3.0'
+	compile 'com.cedarsoftware:json-io:4.10.0'
+	compile 'commons-io:commons-io:2.6'
+	compile 'commons-net:commons-net:3.6'
+	compile 'org.slf4j:slf4j-jdk14:1.7.25'
+	compile 'net.java.dev.glazedlists:glazedlists_java16:1.10.0'
+	compile 'com.miglayout:miglayout-swing:5.2'
+	compile 'org.apache.commons:commons-vfs2:2.2'
+	compile 'com.github.junrar:junrar:2.0.0'
+	compile 'com.fifesoft:rsyntaxtextarea:2.6.1'
+	compile 'com.fifesoft:autocomplete:2.6.1'
+	compile 'net.sf.sevenzipjbinding:sevenzipjbinding:9.20-2.00beta'
+	compile 'net.sf.sevenzipjbinding:sevenzipjbinding-all-platforms:9.20-2.00beta'
+	compile 'com.optimaize.languagedetector:language-detector:0.6'
+	compile 'one.util:streamex:0.6.7'
+	compile 'org.controlsfx:controlsfx:9.0.0'
+	compile 'com.googlecode.lanterna:lanterna:3.0.0'
+	compile 'com.drewnoakes:metadata-extractor:2.11.0'
+	compile 'org.bouncycastle:bcprov-jdk15on:1.59'
+	compile 'org.imgscalr:imgscalr-lib:4.2'
+	compile 'org.codehaus.groovy:groovy:2.5.4'
+	compile 'org.codehaus.groovy:groovy-jsr223:2.5.4'
+	compile 'org.codehaus.groovy:groovy-ant:2.5.4'
+	compile 'org.codehaus.groovy:groovy-json:2.5.4'
+	compile 'org.codehaus.groovy:groovy-xml:2.5.4'
+	compile 'org.codehaus.groovy:groovy-datetime:2.5.4'
+	compile 'org.codehaus.groovy:groovy-dateutil:2.5.4'
+	compile 'org.codehaus.groovy:groovy-templates:2.5.4'
+	compile 'org.codehaus.groovy:groovy-nio:2.5.4'
+	compile 'org.codehaus.groovy:groovy-swing:2.5.4'
+	compile 'org.codehaus.groovy:groovy-groovydoc:2.5.4'
+	compile 'org.apache.ant:ant:1.10.5'
+	compile 'org.apache.ant:ant-launcher:1.10.5'
+	compile 'org.apache.ant:ant-commons-net:1.10.5'
+	compile 'org.apache.ant:ant-javamail:1.10.5'
+	compile 'org.apache.ant:ant-jsch:1.10.5'
+	compile 'org.apache.ant:ant-junit:1.10.5'
+	compile 'org.apache.ivy:ivy:2.4.0'
+	compile 'com.sun.mail:javax.mail:1.6.1'
+	compile 'javax.activation:activation:1.1.1'
+	compile 'net.filebot:ant-spk:0.6'
+	compile 'org.vafer:jdeb:1.6'
+}
+
+apply from: 'properties.gradle'
+
+println application_name
+
+
+task copyRuntimeLibs(type: Copy) {
+    into "build/libs"
+    from configurations.runtime
+  }
+
+task mainJar(type: Jar) { 
+	archiveName = "filebot.jar"
+	includeEmptyDirs = false
+	exclude "**/*.png"	
+	from sourceSets.main.output
+	println 'jar config'
+	
+		println 'jar'
+		println fileTree(dir: "build/libs", include:"**.jar").files.collect{ it.getName() }.join(' ')
+		manifest {
+			attributes('Main-Class': main_class,
+				"Class-Path": fileTree(dir: "build/libs", include:"**.jar").files.collect{ it.getName() }.join(' '))		 
+			}			
+
+}
+
+task resourceJar(type: Jar) {  
+	includeEmptyDirs = false
+	archiveName = "filebot-resources.jar"
+    from(sourceSets.main.resources) {  
+        include "**/*.png"
+    }  
+
+	doLast {
+		println 'resource jar'
+	}	
+}
+
+File manifestFile = file('build/MANIFEST.MF')
+
+task generateManifest << {
+   def manifest = new DefaultManifest(new IdentityFileResolver())
+
+   // add some attributes
+   manifest.attributes('Main-Class': main_class,
+				"Class-Path": fileTree(dir: "build/libs", include:"**.jar").files.collect{ it.getName() }.join(' '))
+
+   // write it to a file
+   manifest.writeTo(manifestFile)
+}
+
+build.dependsOn mainJar
+mainJar.dependsOn resourceJar
+mainJar.dependsOn copyRuntimeLibs
+//jar.dependsOn generateManifest
