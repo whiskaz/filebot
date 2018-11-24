@@ -1,0 +1,62 @@
+ext {
+// Application Info
+application_name = 'FileBot'
+application_version = '4.8.4'
+
+// Script Base URL
+github_stable = 'https://api.filebot.net/v4/script/fn.jar.xz'
+github_master = 'https://raw.githubusercontent.com/filebot/scripts/master/'
+
+// Update Descriptor
+update_url = 'https://app.filebot.net/update_xml'
+
+// Store
+link_mas = 'macappstore =//itunes.apple.com/app/id905384638'
+link_mws = 'ms-windows-store =//review/?ProductId =9NBLGGH52T9X'
+link_usc = 'snap =//filebot'
+
+// Links
+link_app_help = 'https://www.filebot.net/getting-started/embed.html'
+link_app_purchase = 'https://www.filebot.net/purchase.html'
+
+// Help
+link_intro = 'https://www.filebot.net/getting-started/index.html'
+link_forums = 'https://www.filebot.net/forums/'
+link_twitter = 'https://twitter.com/filebot_renamer'
+link_facebook = 'https://www.facebook.com/filebot/'
+link_faq = 'https://www.filebot.net/manual.html'
+link_bugs = 'https://www.filebot.net/report.html'
+link_channel = 'https://www.filebot.net/channel.html'
+link_help = 'https://www.filebot.net/support.html'
+link_help_mas = 'https://www.filebot.net/mac/support.html'
+link_help_mws = 'https://www.filebot.net/windows/support.html'
+
+// File Release System
+link_release_index = 'https://get.filebot.net/filebot'
+
+// Build
+main_class = 'net.filebot.Main'
+jre_version = '11.0.1'
+jfx_version = '11.0.1'
+
+// Minimum System Version
+jvm_version = '11'
+mac_version = '10.10'
+
+// Package Information
+package_name = 'filebot'
+package_identifier = 'net.filebot.FileBot'
+package_developer = 'Reinhard Pointner'
+package_maintainer = 'rednoah@filebot.net'
+package_company = 'Point Planck Limited'
+package_project = 'FileBot'
+package_synopsis = 'The ultimate TV and Movie Renamer'
+package_description = "FileBot is the ultimate tool for organizing and renaming your Movies, TV Shows and Anime as well as fetching subtitles and artwork. It's smart and just works."
+package_tags = "Mass Renamer, Rename TV shows, Rename movies, Organize media files, Fetch Subtitles, Check SFV files, Plex Media Server, Kodi Media Center, TheTVDB, TheMovieDB, OpenSubtitles"
+package_homepage = 'https://www.filebot.net/'
+
+main_class = 'net.filebot.Main'
+jre_version = '11.0.1'
+jfx_version = '11.0.1'
+
+}
